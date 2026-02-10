@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Atelier d'Art</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /* Ajout de styles internes pour le bouton retour et la mise en page du header */
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: #f9f9f9; /* Fond léger si le CSS externe ne le définit pas */
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        /* Style spécifique pour le titre afin qu'il reste centré ou bien placé */
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            margin: 0;
+            font-size: 2rem;
+            color: #333;
+        }
+
+        /* Le groupe de contrôles (droite) */
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Style du nouveau bouton Retour */
+        .btn-back {
+            text-decoration: none;
+            font-family: 'Lato', sans-serif;
+            font-weight: 700;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border: 1px solid #ccc;
+            border-radius: 30px; /* Bordure arrondie style "pilule" élégante */
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            background: white;
+        }
+
+        .btn-back:hover {
+            background-color: #333;
+            color: #fff;
+            border-color: #333;
+        }
+
+        /* Ajustement si l'écran est petit */
+        @media (max-width: 900px) {
+            header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .btn-back {
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html" class="btn-back">
+        <span>&larr;</span> Retour à l'accueil
+    </a>
+
+    <h1>L'Atelier de Restauration</h1>
+
+    <div class="controls">
+        <label for="upload" class="btn btn-primary" style="cursor: pointer;">Nouvelle Œuvre</label>
+        <input type="file" id="upload" accept="image/*">
+
+        <div style="display:flex; align-items:center; gap:10px; font-size: 0.9rem; color: #666;">
+            <label for="gridSize">Finesse :</label>
+            <input type="range" id="gridSize" min="4" max="20" value="12" step="1">
+            <span id="gridSizeVal" style="font-family:'Playfair Display'; font-weight:bold;">12</span>
+        </div>
+
+        <button id="clearBtn" class="btn">Nettoyer</button>
+        <button id="downloadBtn" class="btn">Exporter</button>
+    </div>
+</header>
+
+<main>
+    <div id="canvas-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="notification-toast">Notification</div>
+    </div>
+
+    <div id="palette-sidebar">
+        <div class="palette-header">Palette de Couleurs</div>
+        <div id="colors-grid">
+            <div style="padding:30px 10px; text-align:center; color:#999; font-size:0.9em; font-style:italic;">
+                Veuillez sélectionner une toile pour commencer la restauration.
+            </div>
+        </div>
+
+        <div class="active-color-container">
+            <span style="font-size:0.8rem; text-transform:uppercase; letter-spacing:1px; color:#888;">Pinceau Actif</span>
+            <div id="activeColorPreview"></div>
+        </div>
+    </div>
+</main>
+
+<canvas id="hiddenCanvas" style="display:none;"></canvas>
+
+<script src="js/script.js"></script>
+</body>
+</html>

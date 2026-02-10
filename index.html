@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Experience - Exposition Montbazon</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- VARIABLES & RESET --- */
+        :root {
+            --bg-color: #111111;
+            --text-color: #ffffff;
+            --btn-blue: #3E548E;
+            --btn-red: #C14A36;
+            /* MODIFICATION : Un vert plus vif et "plus vert" */
+            --btn-green: #5ebd3e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'VT323', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* --- TYPOGRAPHIE --- */
+        h1 {
+            font-family: 'Press Start 2P', cursive;
+            text-transform: uppercase;
+            text-align: center;
+            margin-top: 50px;
+            margin-bottom: 80px;
+            font-size: 2.5rem;
+            line-height: 1.5;
+            text-shadow: 4px 4px 0px #000;
+        }
+
+        /* --- CONTENEUR DES BOUTONS --- */
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-bottom: 80px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        /* --- STYLE DES BOUTONS PIXEL ART --- */
+        .pixel-btn {
+            font-family: 'Press Start 2P', cursive;
+            color: white;
+            text-decoration: none;
+
+            /* MODIFICATION : Texte plus grand */
+            font-size: 1.8rem;
+
+            width: 320px;       /* Largeur fixe pour uniformiser */
+            height: 120px;      /* Hauteur fixe pour le centrage */
+
+            /* MODIFICATION : Centrage parfait du texte (Flexbox) */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+
+            position: relative;
+            transition: transform 0.1s;
+            cursor: pointer;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+
+            /* Forme bloc "Pixel" */
+            clip-path: polygon(
+                    20px 0, calc(100% - 20px) 0,
+                    100% 20px, 100% calc(100% - 20px),
+                    calc(100% - 20px) 100%, 20px 100%,
+                    0 calc(100% - 20px), 0 20px
+            );
+        }
+
+        .pixel-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .pixel-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Couleurs spécifiques */
+        .btn-blue {
+            background-color: var(--btn-blue);
+        }
+
+        .btn-red {
+            background-color: var(--btn-red);
+        }
+
+        .btn-green {
+            background-color: var(--btn-green);
+        }
+
+        /* --- ZONE DE TEXTE --- */
+        .description {
+            max-width: 900px;
+            font-size: 1.4rem;
+            line-height: 1.5;
+            text-align: justify;
+            padding: 20px;
+            margin-bottom: 40px;
+        }
+
+        /* --- FOOTER / CREDIT --- */
+        footer {
+            margin-top: auto;
+            padding: 30px;
+            font-size: 1.1rem;
+            color: #888;
+            text-align: center;
+            border-top: 2px solid #222;
+            width: 100%;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 850px) {
+            h1 { font-size: 1.8rem; }
+            .nav-container { flex-direction: column; gap: 30px; }
+            .pixel-btn { width: 100%; max-width: 400px; height: auto; padding: 30px; }
+            .description { font-size: 1.2rem; text-align: left; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>PIXEL EXPERIENCE</h1>
+</header>
+
+<main>
+    <nav class="nav-container">
+        <a href="galerie.html" class="pixel-btn btn-blue">
+            Galerie
+        </a>
+
+        <a href="selfie.html" class="pixel-btn btn-red">
+            Selfie
+        </a>
+
+        <a href="atelier.html" class="pixel-btn btn-green">
+            Pixel oeuvre
+        </a>
+    </nav>
+
+    <section class="description">
+        <p>
+            Bienvenue dans l'exposition Pixel Montbazon. Cette section propose trois expériences interactives
+            permettant, à vous, visiteurs de manipuler et de pixeliser différents éléments graphiques.
+            Chaque expérience est unique et a été conçue et développée par les étudiants de SUPINFO.
+            <br><br>
+            Plongez dans la galerie infinie, capturez votre image ou restaurez des œuvres d'art pixel par pixel.
+        </p>
+    </section>
+</main>
+
+<footer>
+    <p>Réalisé par David AMELINE et Manoah MPAH - Étudiants à SUPINFO</p>
+</footer>
+
+</body>
+</html>

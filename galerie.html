@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musée Universel - Deep Space Intro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="css/galerie.css">
+
+    <style>
+        /* --- NOUVEAU STYLE DU BOUTON RETOUR --- */
+        .back-btn {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            z-index: 999; /* Très haut pour être cliquable */
+
+            /* Apparence : Plus gros et visible */
+            color: #ffffff;
+            background-color: rgba(0, 0, 0, 0.5); /* Fond sombre pour la lisibilité */
+            border: 2px solid rgba(255, 255, 255, 0.3); /* Bordure visible */
+            padding: 15px 35px; /* Zone de clic agrandie */
+            border-radius: 50px; /* Forme arrondie élégante */
+
+            /* Typographie */
+            text-decoration: none;
+            font-family: "Lato", sans-serif;
+            font-size: 1.1rem; /* Texte plus grand */
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+
+            /* Flex pour aligner la flèche */
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            /* Animation d'apparition */
+            opacity: 0;
+            animation: fadeInBtn 1s ease forwards;
+            animation-delay: 1s; /* Apparaît plus vite qu'avant */
+
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px); /* Petit effet de flou moderne */
+        }
+
+        /* Effet au survol */
+        .back-btn:hover {
+            background-color: rgba(255, 255, 255, 1);
+            color: #000; /* Inversion des couleurs */
+            border-color: #fff;
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+        }
+
+        .back-btn::before {
+            content: '←';
+            font-size: 1.4rem;
+            transition: transform 0.3s ease;
+        }
+
+        .back-btn:hover::before {
+            transform: translateX(-5px);
+        }
+
+        @keyframes fadeInBtn {
+            to { opacity: 1; }
+        }
+
+        /* Ajustement Mobile */
+        @media (max-width: 768px) {
+            .back-btn {
+                top: 20px;
+                left: 20px;
+                padding: 12px 25px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<a href="index.html" class="back-btn">
+    Retour
+</a>
+
+<div id="loader">
+    <div class="font-serif italic text-2xl text-white">Reconstruction Spatiale...</div>
+    <div class="loader-text" id="loader-status">Connexion à l'éther</div>
+    <div class="loader-line" id="loader-line"></div>
+    <div id="api-error" class="error-message" style="display: none;"></div>
+</div>
+
+<div class="bg-noise"></div>
+
+<div id="ui-layer">
+    <h1>l'art<br>universelle</h1>
+    <p>Galerie virtuelle - SUPINFO & e-artsup</p>
+</div>
+
+<div class="api-status" id="api-status-text">Initialisation...</div>
+
+<div id="scene"></div>
+
+<div class="scroll-indicator">EXPLORER</div>
+
+<script src="js/galerie.js"></script>
+</body>
+</html>

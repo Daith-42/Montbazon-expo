@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Photo - Expérience 2</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #111111;
+            --panel-blue: #3E548E; /* Bleu du panneau de contrôle */
+            --btn-action: #5ebd3e; /* Vert du bouton sauvegarder */
+            --text-color: #fff;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'VT323', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-family: 'Press Start 2P', cursive;
+            text-transform: uppercase;
+            font-size: 1.5rem;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .back-btn {
+            font-family: 'Press Start 2P', cursive;
+            background: none;
+            border: 2px solid white;
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        /* --- CONTENEUR PRINCIPAL --- */
+        .main-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        /* --- ZONE CAMERA / CANVAS (GAUCHE) --- */
+        .canvas-wrapper {
+            position: relative;
+            border: 4px solid white;
+            border-radius: 15px;
+            overflow: hidden;
+            width: 640px;
+            height: 480px;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Video cachée utilisée pour la capture */
+        #videoSource {
+            display: none;
+        }
+
+        /* --- PANNEAU DE CONTROLE (DROITE) --- */
+        .controls-panel {
+            background-color: var(--panel-blue); /* Basé sur l'image PDF */
+            border: 4px solid white;
+            border-radius: 15px;
+            padding: 20px;
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .instruction {
+            font-size: 1.4rem;
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        /* Grille des 6 boutons comme sur la photo */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .tool-btn {
+            background: #222;
+            border: 2px solid white;
+            height: 60px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.1s;
+        }
+
+        .tool-btn:hover { background: #444; }
+        .tool-btn.active { background: var(--btn-action); border-color: #fff; }
+
+        /* Icones CSS pures pour les boutons */
+        .icon-square { width: 20px; height: 20px; background: white; }
+        .icon-circle { width: 20px; height: 20px; background: white; border-radius: 50%; }
+        .icon-pixel { width: 4px; height: 4px; background: white; box-shadow: 4px 0 white, 0 4px white, 4px 4px white; }
+
+        .icon-zoom-in::before { content: "+"; font-family: 'Press Start 2P'; font-size: 1.5rem; color: white; }
+        .icon-zoom-out::before { content: "-"; font-family: 'Press Start 2P'; font-size: 1.5rem; color: white; }
+        .icon-upload::before { content: "📁"; font-size: 1.5rem; }
+
+        /* Bouton Sauvegarder */
+        .save-btn {
+            background-color: var(--panel-blue);
+            border: 4px solid white;
+            font-family: 'Press Start 2P', cursive;
+            color: white;
+            padding: 15px;
+            width: 100%;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 10px;
+            /* Clip path pour effet pixel */
+            clip-path: polygon(
+                    10px 0, calc(100% - 10px) 0,
+                    100% 10px, 100% calc(100% - 10px),
+                    calc(100% - 10px) 100%, 10px 100%,
+                    0 calc(100% - 10px), 0 10px
+            );
+        }
+
+        .save-btn:hover { background-color: #4a6fd8; }
+
+        /* Input file caché */
+        #fileInput { display: none; }
+
+        @media (max-width: 950px) {
+            .canvas-wrapper { width: 100%; height: auto; aspect-ratio: 4/3; }
+            .controls-panel { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html" class="back-btn">< Retour</a>
+    <h1>PIXEL PHOTO</h1>
+    <div style="width: 80px;"></div> </header>
+
+<main class="main-container">
+
+    <div class="canvas-wrapper">
+        <video id="videoSource" autoplay playsinline></video>
+        <canvas id="pixelCanvas"></canvas>
+    </div>
+
+    <div class="controls-panel">
+        <p class="instruction">Pixelise ici ta photo comme tu le souhaites</p>
+
+        <div class="tools-grid">
+            <button class="tool-btn active" onclick="setShape('square')" title="Carrés"><div class="icon-square"></div></button>
+            <button class="tool-btn" onclick="setShape('circle')" title="Ronds"><div class="icon-circle"></div></button>
+            <button class="tool-btn" onclick="triggerFile()" title="Importer Image"><div class="icon-upload"></div></button>
+
+            <button class="tool-btn" onclick="changeSize(2)" title="Plus gros"><div class="icon-zoom-in"></div></button>
+            <button class="tool-btn" onclick="changeSize(-2)" title="Plus petit"><div class="icon-zoom-out"></div></button>
+            <button class="tool-btn" onclick="resetSize()" title="Reset"><div class="icon-pixel"></div></button>
+        </div>
+
+        <input type="file" id="fileInput" accept="image/*">
+
+        <button class="save-btn" onclick="saveImage()">
+            Sauvegarder<br>et envoyer
+        </button>
+    </div>
+
+</main>
+
+<script>
+    const video = document.getElementById('videoSource');
+    const canvas = document.getElementById('pixelCanvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const fileInput = document.getElementById('fileInput');
+
+    let pixelSize = 12; // Taille par défaut
+    let currentShape = 'square'; // 'square' ou 'circle'
+    let isVideoActive = true;
+    let staticImage = null; // Pour stocker l'image importée
+
+    // Démarrage Webcam
+    async function startCamera() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            video.srcObject = stream;
+            isVideoActive = true;
+            draw();
+        } catch (err) {
+            console.error("Erreur webcam:", err);
+            alert("Impossible d'accéder à la caméra. Essayez d'importer une photo.");
+        }
+    }
+
+    // Boucle de dessin
+    function draw() {
+        // Configuration de la taille du canvas
+        if (canvas.width !== 640) {
+            canvas.width = 640;
+            canvas.height = 480;
+        }
+
+        if (isVideoActive) {
+            // Dessiner la vidéo dans un canvas mémoire (virtuel) ou directement
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        } else if (staticImage) {
+            ctx.drawImage(staticImage, 0, 0, canvas.width, canvas.height);
+        }
+
+        pixelate(); // Appliquer l'effet
+
+        requestAnimationFrame(draw);
+    }
+
+    // Effet de pixellisation
+    function pixelate() {
+        // 1. Récupérer les données de l'image brute
+        const w = canvas.width;
+        const h = canvas.height;
+
+        // Optimisation : Créer un canvas temporaire minuscule
+        // Cela permet au navigateur de faire la moyenne des couleurs automatiquement
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+
+        const cols = Math.floor(w / pixelSize);
+        const rows = Math.floor(h / pixelSize);
+
+        tempCanvas.width = cols;
+        tempCanvas.height = rows;
+
+        // Dessiner l'image en tout petit (ce qui "pixelise" les données)
+        tempCtx.drawImage(canvas, 0, 0, cols, rows);
+
+        // Récupérer les données de couleur de la petite image
+        const imgData = tempCtx.getImageData(0, 0, cols, rows).data;
+
+        // Effacer le grand canvas pour redessiner proprement
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, w, h);
+
+        // Redessiner forme par forme
+        for (let y = 0; y < rows; y++) {
+            for (let x = 0; x < cols; x++) {
+                const index = (y * cols + x) * 4;
+                const r = imgData[index];
+                const g = imgData[index + 1];
+                const b = imgData[index + 2];
+
+                ctx.fillStyle = `rgb(${r},${g},${b})`;
+
+                if (currentShape === 'square') {
+                    ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+                } else {
+                    ctx.beginPath();
+                    ctx.arc(
+                        x * pixelSize + pixelSize / 2,
+                        y * pixelSize + pixelSize / 2,
+                        pixelSize / 2,
+                        0,
+                        Math.PI * 2
+                    );
+                    ctx.fill();
+                }
+            }
+        }
+    }
+
+    // --- CONTROLES ---
+
+    function setShape(shape) {
+        currentShape = shape;
+        // Gestion visuelle des boutons actifs
+        document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+    }
+
+    function changeSize(delta) {
+        pixelSize += delta;
+        if (pixelSize < 4) pixelSize = 4;
+        if (pixelSize > 50) pixelSize = 50;
+    }
+
+    function resetSize() {
+        pixelSize = 12;
+    }
+
+    // --- IMPORT IMAGE ---
+    function triggerFile() {
+        fileInput.click();
+    }
+
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    staticImage = img;
+                    isVideoActive = false; // Arrêter d'utiliser la webcam
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // --- SAUVEGARDER ---
+    function saveImage() {
+        const link = document.createElement('a');
+        link.download = 'pixel-photo.png';
+        link.href = canvas.toDataURL();
+        link.click();
+    }
+
+    // Lancer
+    window.onload = startCamera;
+
+</script>
+</body>
+</html>
