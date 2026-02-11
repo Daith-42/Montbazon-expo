@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musée Universel - Deep Space Intro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="css/galerie.css">
+</head>
+<body>
+
+    <a href="index.html" class="back-btn">
+        Retour
+    </a>
+
+    <div id="loader">
+        <div class="font-serif italic text-2xl text-white">Reconstruction Spatiale...</div>
+        <div class="loader-text" id="loader-status">Connexion à l'éther</div>
+        <div class="loader-line" id="loader-line"></div>
+        <div id="api-error" class="error-message" style="display: none;"></div>
+    </div>
+
+    <div class="bg-noise"></div>
+
+    <div id="ui-layer">
+        <h1>l'art<br>universelle</h1>
+        <p>Galerie virtuelle - SUPINFO & e-artsup</p>
+    </div>
+    
+    <div class="api-status" id="api-status-text">Initialisation...</div>
+
+    <div id="scene"></div>
+
+    <div class="scroll-indicator">EXPLORER</div>
+
+<script src="./js/galerie.js"></script>
+</body>
+</html>
